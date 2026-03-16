@@ -103,7 +103,7 @@ Si no se encuentra ninguna coincidencia, se imprime un mensaje de error que indi
 Ingrese una opció: 1
 
 
-================================================== REGISTRAR NUEVO PEDIDO ==================================================
+=============== REGISTRAR NUEVO PEDIDO ===============
 
 
 Nombre del cliente: Alex
@@ -127,7 +127,7 @@ Desea utilizar otra opción? (S/N): s
 
 Ingrese una opció: 2
 
-================================================== EDITAR PEDIDO ==================================================
+=============== EDITAR PEDIDO ===============
 
 ID del pedido: 2
 
@@ -153,7 +153,7 @@ Desea utilizar otra opción? (S/N): s
 
 Ingrese una opció: 3
 
-================================================== ELIMINAR PEDIDO ==================================================
+=============== ELIMINAR PEDIDO ===============
 
 ID del pedido: 2
 
