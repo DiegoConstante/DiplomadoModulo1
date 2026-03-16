@@ -38,7 +38,7 @@ Si encuentra una coincidencia, la función presenta un menú de opciones: editar
 
 Si no se encuentra ningún producto, se imprime un mensaje de error.
 
-###eliminarProducto()
+### eliminarProducto()
 La función primero solicita al usuario que ingrese el ID del producto que desea eliminar.
 
 Luego, recorre la lista de inventario y verifica si el ID de cada pedido coincide con el ingresado por el usuario. Si se encuentra una coincidencia, el producto se elimina de la lista mediante el método (pop()) y se imprime un mensaje de éxito.
