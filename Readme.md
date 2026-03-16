@@ -86,24 +86,38 @@ Si no se encuentra ninguna coincidencia, se imprime un mensaje de error que indi
 
 4 = Listado de pedidos
 
+
 ========== GESTIÓN DE PRODUCTOS ==========
+
 5 = Registrar nuevo producto
+
 6 = Modificar producto
+
 7 = Eliminar producto
+
 8 = Listado de productos
 
+
 9 = Salir
+
 Ingrese una opció: 1
+
 
 ================================================== REGISTRAR NUEVO PEDIDO ==================================================
 
+
 Nombre del cliente: Alex
+
 Nombre del producto: Producto 1
+
 Cantidad del producto salientes: 3
+
 
 ----------Pedido registrado con exito.----------
 
+
 ID: 4 | Cliente: Alex | Hora: 16-03-26 15:49:16 | Producto: Producto 1 | Cantidad: 3
+
 
 Desea utilizar otra opción? (S/N): s
 
@@ -118,8 +132,11 @@ Ingrese una opció: 2
 ID del pedido: 2
 
 1 = Editar nombre del cliente
+
 2 = Editar producto
+
 3 = Editar cantidad
+
 
 Opcion: 3
 Nueva cantidad del producto saliente: 2
@@ -151,7 +168,10 @@ Desea utilizar otra opción? (S/N): s
 Ingrese una opció: 4
 
 ID: 1 | Cliente: Diego Constante | Hora: 16-03-26 15:49:07 | Producto: Producto 1 | Cantidad: 10
+
 ID: 3 | Cliente: Miguel Angel | Hora: 16-03-26 15:49:07 | Producto: Producto 3 | Cantidad: 15
+
 ID: 4 | Cliente: Alex | Hora: 16-03-26 15:49:16 | Producto: Producto 1 | Cantidad: 3
+
 
 Desea utilizar otra opción? (S/N): N
