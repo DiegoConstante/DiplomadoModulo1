@@ -73,3 +73,82 @@ Si no se encuentra ninguna coincidencia, se imprime un mensaje de error que indi
 
 - listadoPedidos()
   Esta función imprime una lista de pedidos, itera sobre la lista pedidos y para cada pedido, imprime el ID del pedido, el nombre del cliente, la hora, el producto y la cantidad.
+
+# Ejemplo de ejecución del sistema
+
+========== GESTIÓN DE PEDIDOS ==========
+
+1 = Registrar nuevo pedido
+2 = Modificar pedido
+3 = Eliminar pedido
+4 = Listado de pedidos
+
+========== GESTIÓN DE PRODUCTOS ==========
+5 = Registrar nuevo producto
+6 = Modificar producto
+7 = Eliminar producto
+8 = Listado de productos
+
+9 = Salir
+Ingrese una opció: 1
+
+================================================== REGISTRAR NUEVO PEDIDO ==================================================
+
+Nombre del cliente: Alex
+Nombre del producto: Producto 1
+Cantidad del producto salientes: 3
+
+----------Pedido registrado con exito.----------
+
+ID: 4 | Cliente: Alex | Hora: 16-03-26 15:49:16 | Producto: Producto 1 | Cantidad: 3
+
+Desea utilizar otra opción? (S/N): s
+
+========== GESTIÓN DE PEDIDOS ==========
+
+(Opciones del menu)
+
+Ingrese una opció: 2
+
+================================================== EDITAR PEDIDO ==================================================
+
+ID del pedido: 2
+
+1 = Editar nombre del cliente
+2 = Editar producto
+3 = Editar cantidad
+
+Opcion: 3
+Nueva cantidad del producto saliente: 2
+
+----------Pedido modificado con exito.----------
+
+ID: 2 | Cliente: Saul Rubio | Hora: 16-03-26 15:49:07 | Producto: Producto 2 | Cantidad: 2
+
+Desea utilizar otra opción? (S/N): s
+
+========== GESTIÓN DE PEDIDOS ==========
+
+(Opciones del menu)
+
+Ingrese una opció: 3
+
+================================================== ELIMINAR PEDIDO ==================================================
+
+ID del pedido: 2
+
+----------Pedido eliminado con exito.----------
+
+Desea utilizar otra opción? (S/N): s
+
+========== GESTIÓN DE PEDIDOS ==========
+
+(Opciones del menu)
+
+Ingrese una opció: 4
+
+ID: 1 | Cliente: Diego Constante | Hora: 16-03-26 15:49:07 | Producto: Producto 1 | Cantidad: 10
+ID: 3 | Cliente: Miguel Angel | Hora: 16-03-26 15:49:07 | Producto: Producto 3 | Cantidad: 15
+ID: 4 | Cliente: Alex | Hora: 16-03-26 15:49:16 | Producto: Producto 1 | Cantidad: 3
+
+Desea utilizar otra opción? (S/N): N
