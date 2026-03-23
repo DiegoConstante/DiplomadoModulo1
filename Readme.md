@@ -1,242 +1,138 @@
-# Problema 1 - Control de Temperatura en un Edificio Inteligente.
+# Clase 9.
 
-## Descripción
+## Problema 1 - Análisis de Fuerzas en una Estructura.
 
-Sistema para optimizar el consumo energético ajustando temperaturas según hora, ocupación y clima externo.
+### Solución.
 
-## Estructura general
+El código modela una estructura como una matriz 3x3 de fuerzas, donde cada valor representa una fuerza aplicada en un nodo. A partir de esta matriz, el programa:
 
-### Función
+- Calcula las reacciones en cada nodo (fuerzas opuestas).
 
-1. datos_sensor()
-   Simula entrada de datos
+- Obtiene las fuerzas resultantes por filas y columnas.
 
-2. calcular_tem_optima(hora, clima, ocupacion)
-   Calcula temperatura ideal
+- Calcula la fuerza total del sistema.
 
-3. consumo_energetico(temp_optima)
-   Evalúa consumo temp_optima
+- Verifica si la estructura cumple con la condición de equilibrio estático (ΣF = 0).
 
-### Procedimiento
+básicamente, simula el comportamiento básico de una estructura aplicando principios de la estática.
 
-1. ajustar_temperatura(temperatura, temp_optima, zona)
-   Ajusta la temperatura actual
+### Enfoque.
 
-## Funciones - procedimientos
+El enfoque del código es modular y basado en descomposición del problema, lo que significa que se divide el problema en funciones más pequeñas y específicas como:
 
-### datos_sensor()
+- Cálculo por nodo.
 
-Función para leer los datos de sensores de temperatura de las diferentes zonas del edificio.
+- Suma total del sistema.
 
-### calcular_tem_optima()
+- Verificación de equilibrio.
 
-Función para calcular la temperatura optima en cada zona del edificio, teniendo en cuenta la hora, clima y ocupación.
+El uso de este enfoque influye en la eficiencia ya que permite:
 
-### ajustar_temperatura()
+- Recorrido estructurado de datos.
 
-Procedimiento para aumentar o disminuir la temperatura según los valores de la función anterior.
+- Modularidad.
 
-### consumo_energetico()
+- Cálculo directo.
 
-Función para calcular en consumo energético
+- Escalabilidad sencilla.
 
-# Problema 2 - Gestión de Inventario en un Almacén
+## Problema 2 - Simulación de Fluido en una Cuadrícula 3D.
 
-## Descripción
+### Solución.
 
-Sistema para gestionar entrada y salida de productos y optimizar el reabastecimiento de los mismo minimizando exceso de inventario
+El código simula el comportamiento de un fluido dentro de una cuadrícula 3D (3x3x3), donde cada celda contiene:
 
-## Estructura General
+- Presión.
 
-- Lista productos para simular BDD
+- Temperatura.
 
-  Producto | Precio | cantidad
+- Velocidad.
 
-productos = [
-["Producto 1", 10.99, 80],
-["Producto 2", 9.99, 40],
-["Producto 3", 8.99, 60],
-["Producto 4", 7.99, 20],
-["Producto 5", 6.99, 70]
-]
+El sistema inicializa el fluido con valores base, aplica una perturbación de presión en el centro (como una onda o impulso), propaga esa perturbación a través del volumen en varios pasos y muestra cómo evolucionan los valores del fluido con el tiempo.
 
-### Función
+### Enfoque
 
-1. entrada_productos()
-   Simula entrada de productos
+El enfoque es numérico y basado en simulación discreta, específicamente en el uso de una matriz tridimensional (arreglo 3D) para representar el espacio.
 
-2. salida_productos()
-   Simular salida de productos
+- Aplicación de un modelo de difusión:
+  Cada celda se actualiza en función del promedio de sus vecinos.
 
-3. alerta_stock()
-   Generar alertas de stock
+- Uso de actualización simultánea:
+  Se crea una nueva cuadrícula para evitar errores al modificar valores en el mismo paso.
 
-### Procedimiento
+- Separación en funciones:
+  Inicialización.
 
-1. inventario_optimo(productos)
-   Calcular inventario optimo
+Cálculo de vecinos.
 
-## Funciones - procedimientos
+Actualización de celdas.
 
-### entrada_productos()
+Propagación de la onda.
 
-Función para registrar nuevos productos o aumentar la cantidad de productos ya existentes y añadirlos a la lista productos[]
+permitiendo de esta manera un codigo mas simple y al igual que el problema anterior el código es modular por lo que:
 
-### salida_productos()
+- Las funciones estan separadas para cada tarea.
 
-Función para registrar salida de productos restando la cantidad del mismo
+- Facilita el mantenimiento.
 
-### inventario_optimo()
+- Permite a escalar a volumenes mas grandes.
 
-Función para calcular el inventario optimo de los productos en la lista en caso de haber alguno con poco stock
+## Problema 3 - Análisis de Imágenes Médicas en 3D
 
-### alerta_stock()
+### Solución
 
-Función que muestra una alerta en caso de que un producto exceda el límite mínimo de stock
+Este código implementa una simulación sencilla de procesamiento de imágenes en un entorno tridimensional, representado mediante un volumen de datos creado con la librería NumPy. El volumen está compuesto por tres capas de 10x10, donde cada valor representa la intensidad de un “píxel”. Inicialmente, todos los valores se establecen en cero, simulando una imagen completamente oscura, y luego se introducen manualmente algunos valores altos en posiciones específicas para representar ruido o puntos brillantes aislados.
 
-# Problema 3 - Sistema de Navegación para un Vehículo Autónomo
+### Enfoque
 
-## Descripción
+El enfoque se basa en un filtro de promedio, una técnica común en procesamiento de imágenes. Este método recorre la matriz y, para cada píxel (excepto los bordes), calcula el promedio de los valores dentro de una ventana de 3x3 que lo rodea. De esta forma, el valor de cada píxel se reemplaza por uno más representativo de su entorno.
 
-Sistema de navegación para un vehículo autónomo que planifique rutas, evite obstáculos y optimice el tiempo de viaje.
+- Se trabaja con ventanas pequeñas (3x3).
 
-## Estructura general
+- Se evita modificar la matriz original directamente.
 
-### Función
+- Se aplica un método determinista y fácil de entender.
 
-1. datos_sensor_camara()
-   Simula datos de cámara y sensores
+Este enfoque es eficiente porque utiliza operaciones simples como sumas y promedios, lo que reduce el costo computacional. Al trabajar con ventanas pequeñas, el número de cálculos por píxel es constante, lo que permite que el algoritmo escale de forma predecible a imágenes más grandes.
 
-2. evitar_obstaculo(dat_sensor_distancia)
-   Decide frenado por distancia
+- Bajo costo computacional por píxel.
 
-3. ajustar_velocidad(dat_camara_trafico, dat_sensor_velocidad)
-   Ajusta velocidad por tráfico
+- Buen rendimiento incluso si aumenta el tamaño de la imagen.
 
-### Procedimiento
+- Código claro y fácil de mantener.
 
-1. ruta_optima(dat_camara_trafico)  
-   Selecciona ruta según tráfico
+## Problema 4 - Manejo de Datos en una Tabla de Sensores
 
-## Funciones - procedimientos
+### Solución
 
-### datos_sensor_camara()
+El programa permite visualizar los datos registrados, así como obtener información estadística relevante tanto por sensor como por instante de tiempo. Además, incluye un resumen global que proporciona una visión general del comportamiento de las temperaturas registradas, lo que ayuda a identificar tendencias, valores extremos o posibles anomalías.
 
-Función principal para obtener datos simulados de sensores.
+### Enfoque
 
-Pide al usuario: nivel de tráfico ("Alto", "Medio", "Bajo"), distancia al obstáculo (en metros) y velocidad actual (km/h).
+El código está dividido en funciones específicas, cada una encargada de una tarea concreta, como mostrar los datos o calcular estadísticas. Este enfoque modular facilita la comprensión del programa y permite reutilizar o modificar partes del código sin afectar el resto del sistema.
 
-### ruta_optima()
+- Se utiliza una estructura tipo matriz para organizar los datos.
 
-Evalúa el nivel de tráfico y selecciona la ruta óptima:
+- Se aplican funciones estadísticas como promedio y desviación estándar.
 
-### evitar_obstaculo()
+- Se separa el análisis por sensor, por tiempo y a nivel global.
 
-Analiza la distancia al obstáculo y activa frenado:
+El uso de funciones de NumPy mejora significativamente la eficiencia del programa, ya que estas están optimizadas para trabajar con arreglos numéricos. Esto permite realizar cálculos como promedios, mínimos, máximos y desviaciones estándar de forma rápida y precisa, incluso si el volumen de datos aumenta.
 
-### ajustar_velocidad()
+## Problema 5 - Transformación de Coordenadas en un Sistema Cartesiano
 
-Define límites máximos: 90 km/h (Bajo), 70 km/h (Medio), 50 km/h (Alto) y los ajusta según el tráfico.
+### Solución
 
-# Problema 4 - Optimización de la Producción en una Fábrica
+El programa permite visualizar los puntos antes y después de aplicar transformaciones. Primero se dibuja la figura original en una cuadrícula de texto, y luego se aplican dos transformaciones: un escalado (que aumenta el tamaño de la figura) y una traslación (que desplaza la figura en el plano). Cada resultado se muestra en consola, lo que facilita observar cómo cambian las posiciones de los puntos.
 
-## Descripción
+### Enfoque
 
-Sistema que optimiza el proceso de producción en una fábrica, minimizando el tiempo de inactividad y maximizando la eficiencia de sus máquinas.
+El enfoque utilizado se basa en el uso de transformaciones matriciales, un método fundamental en geometría computacional y gráficos por computadora. En este caso, los puntos se representan como una matriz, lo que permite aplicar operaciones matemáticas de forma directa y eficiente.
 
-## Estructura general
+Este enfoque aprovecha la capacidad de trabajar con operaciones vectorizadas, evitando el uso de ciclos explícitos para transformar cada punto individualmente. Además, la visualización en consola mediante una cuadrícula permite interpretar fácilmente los resultados.
 
-### Función
+- Uso de matrices para representar puntos.
 
-1. estadoMaquina(horas_uso)
-   Determina estado técnico de máquina (Bueno, Regular, Malo)
+- Aplicación de transformaciones mediante operaciones matemáticas.
 
-### Procedimiento
-
-1. mantenimientoMaquina()
-   Genera alertas de mantenimiento preventivo o urgente
-
-2. nivelRendimiento()
-   Muestra rendimiento máquinas según sus horas de uso
-
-3. nivelProduccion()
-   Calcula producción óptima
-
-## Funciones - procedimientos
-
-### estadoMaquina(horas_uso)
-
-Función auxiliar que clasifica estado máquina según horas uso
-
-Retorna: "Bueno", "Regular", "Malo"
-
-### mantenimientoMaquina()
-
-Procedimiento recorre lista maquinas[] evaluando cada máquina
-
-Clasifica por rangos horas:
-<= 10000h (nuevo ✅)
-10000-40000h (casi nuevo ✅)
-40000-87000h (preventivo 🛠️)
-87000-90000h (prioritario 🛠️)
-90000h (urgente 🔴)
-
-### nivelRendimiento()
-
-Procedimiento muestra tabla completa de todas las máquinas
-
-### nivelProduccion()
-
-Procedimiento pide ventas estimadas e inventario actual
-
-Calcula producción necesaria: ventas_estimadas - inventario_actual
-
-Distribuye carga: +20% máquinas <10000h, normal ≤80000h, -10% >80000h
-
-Actualiza rendimientos en maquinas[] y muestra ajustes
-
-# Problema 5 - Sistema de Riego Automatizado para Agricultura
-
-## Descripción
-
-Sistema de riego automatizado que optimiza el uso de agua en función de las condiciones del suelo, las previsiones meteorológicas
-
-## Estructura General
-
-### Función
-
-1. leer_humedad_suelo()
-   Simula sensor humedad suelo
-
-2. consultar_clima()
-   Obtiene previsión meteorológica
-
-3. calcular_riego(humedad, clima)
-   Calcula cantidad óptima riego
-
-### Procedimiento
-
-1. controlar_valvulas(zona_riego)
-   Activa/desactiva válvulas
-
-## Funciones - procedimientos
-
-### leer_humedad_suelo()
-
-Función para simular lectura sensor humedad (0-100%), solicita al usuario valor entre 20%-80%
-
-### consultar_clima()
-
-Función para simular previsión meteorológica ("Soleado", "Nublado", "Lluvia")
-
-### calcular_riego(humedad, clima)
-
-Función calcula el riego optimo según clima y humedad del suelo
-
-### controlar_valvulas(zona_riego)
-
-Procedimiento calcula el estado de las válvulas según la función:
-
-calcular_riego()
-
-define si la válvula se abre o se cierra
+- Visualización simple en un plano de texto.

@@ -1,58 +1,47 @@
-# Sistema de Navegación para un Vehículo Autónomo
+import numpy as np
 
-def datos_sensor_camara():
-    dat_camara_trafico = input("Nivel de Trafico (Alto, Medio, Bajo): ")
-    dat_sensor_distancia = int(input("Distancia al obstaculo (10m, 20m, 30m): "))
-    dat_sensor_velocidad = float(input("Velocidad del vehiculo (Km/h): "))
+# 1. Crear un volumen 3D (3 capas, 10 filas, 10 columnas)
+# Llenamos con ceros y ponemos algunos "píxeles" con ruido (valores altos)
+volumen = np.zeros((3, 10, 10))
 
-    return dat_camara_trafico, dat_sensor_distancia, dat_sensor_velocidad
+# Añadimos ruido aleatorio en la Capa 0
+volumen[0, 2, 2] = 8  # Un píxel muy brillante rodeado de oscuridad
+volumen[0, 2, 3] = 7
+volumen[0, 5, 5] = 9
 
-def ruta_optima(dat_camara_trafico):
-    if dat_camara_trafico == "Alto":
-        print("Ruta 1")
-    elif dat_camara_trafico == "Medio":
-        print("Ruta 2")
-    elif dat_camara_trafico == "Bajo":
-        print("Ruta 3")
+def imprimir_capa_consola(capa, titulo):
+    """Muestra la matriz en consola usando caracteres para que parezca imagen"""
+    print(f"--- {titulo} ---")
+    for fila in capa:
+        # Si el valor es > 0, ponemos un caracter, si no, un espacio
+        linea = "".join([" @ " if val > 1 else " . " for val in fila])
+        print(linea)
 
-def evitar_obstaculo(dat_sensor_distancia):
-    if dat_sensor_distancia < 10:
-        print("Frenado de emergencia. Evitar obstaculo")
-    elif 10 <= dat_sensor_distancia < 20:
-        print("Frenado progresivo. Evitar obstaculo")
-    elif dat_sensor_distancia >= 20:
-        print("Frenado normal. Evitar obstaculo")    
+def filtro_promedio_2d(capa):
+    """Aplica un suavizado simple promediando cada píxel con sus vecinos"""
+    alto, ancho = capa.shape
+    nueva_capa = np.zeros((alto, ancho))
+    
+    for i in range(1, alto - 1):
+        for j in range(1, ancho - 1):
+            # Extraemos una ventana de 3x3 alrededor del píxel
+            ventana = capa[i-1:i+2, j-1:j+2]
+            # El nuevo valor es el promedio de esa ventana
+            nueva_capa[i, j] = np.mean(ventana)
+            
+    return nueva_capa
 
-def ajustar_velocidad(dat_camara_trafico, dat_sensor_velocidad):
+# --- EJECUCIÓN ---
 
-    VELOCIDAD_MAX_TRAFICO_BAJO = 120
-    VELOCIDAD_MAX_TRAFICO_MEDIO = 60
-    VELOCIDAD_MAX_TRAFICO_ALTO = 30
+# Tomamos la primera capa del volumen médico
+capa_original = volumen[0]
 
-    if dat_camara_trafico == "Bajo":
-        if dat_sensor_velocidad < VELOCIDAD_MAX_TRAFICO_BAJO:
-            print()
-            print("Tráfico bajo: Aumentando velocidad progresivamente.")
-        else:
-            print(f"Tráfico bajo: Velocidad óptima alcanzada ({VELOCIDAD_MAX_TRAFICO_BAJO} km/h).")
+# Aplicamos el suavizado
+capa_suavizada = filtro_promedio_2d(capa_original)
 
-    elif dat_camara_trafico == "Medio":
-        if dat_sensor_velocidad > VELOCIDAD_MAX_TRAFICO_MEDIO:
-            print(f"Tráfico medio: Reduciendo velocidad a {VELOCIDAD_MAX_TRAFICO_MEDIO} km/h.")
-        elif dat_sensor_velocidad < VELOCIDAD_MAX_TRAFICO_MEDIO:
-            print("Tráfico medio: Manteniendo velocidad actual.")
-        else:
-            print(f"Tráfico medio: Velocidad óptima ({VELOCIDAD_MAX_TRAFICO_MEDIO} km/h).")
+# Resultados
+imprimir_capa_consola(capa_original, "IMAGEN ORIGINAL (CON RUIDO)")
+imprimir_capa_consola(capa_suavizada, "IMAGEN SUAVIZADA (FILTRADA)")
 
-    elif dat_camara_trafico == "Alto":
-        if dat_sensor_velocidad > VELOCIDAD_MAX_TRAFICO_ALTO:
-            print(f"Tráfico alto: Reduciendo velocidad a {VELOCIDAD_MAX_TRAFICO_ALTO} km/h.")
-        else:
-            print("Tráfico alto: Velocidad bajo control.")
-
-# Sistema principal
-
-dat_camara_trafico, dat_sensor_distancia, dat_sensor_velocidad = datos_sensor_camara()
-ruta_optima(dat_camara_trafico)
-evitar_obstaculo(dat_sensor_distancia)
-ajustar_velocidad(dat_camara_trafico, dat_sensor_velocidad) 
+print("Nota: El suavizado distribuye el valor del ruido entre los vecinos,")
+print("haciendo que los puntos brillantes se 'difuminen'.")

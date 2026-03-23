@@ -1,126 +1,220 @@
-#Gestión de Inventario en un Almacén 
+# Simulación de Fluido en una Cuadrícula 3D
+# Propagación de ondas de presión en un volumen 3x3x3
+ 
+# ============================================================
+# ESTRUCTURA DEL FLUIDO
+# Arreglo tridimensional [x][y][z]
+# Cada celda = [presion (Pa), temperatura (°C), velocidad (m/s)]
+#              [  indice 0   ,    indice 1     ,   indice 2    ]
+# ============================================================
+ 
+TAMANIO    = 3
+PASOS_SIM  = 5       # Número de iteraciones de la simulación
+ 
+# Constantes físicas simplificadas del modelo
+FACTOR_DIFUSION   = 0.15   # Qué tan rápido se propaga la presión a vecinos
+FACTOR_TEMP       = 0.10   # Influencia de presión en temperatura
+FACTOR_VEL        = 0.05   # Influencia de presión en velocidad
+PRESION_BASE      = 101.3  # Presión atmosférica base (kPa)
+TEMP_BASE         = 25.0   # Temperatura base (°C)
+VEL_BASE          = 0.0    # Velocidad base (m/s)
+ 
+ 
+# -----------------------------------------------------------
+# Inicialización del fluido: arreglo 3D con listas anidadas
+# Formato por celda: [presion, temperatura, velocidad]
+# -----------------------------------------------------------
+ 
+def inicializarFluido():
+    # Crea la cuadrícula 3x3x3 con condiciones iniciales base.
+    fluido = []
+    for x in range(TAMANIO):
+        capa_x = []
+        for y in range(TAMANIO):
+            fila_y = []
+            for z in range(TAMANIO):
+                # Celda: [presion, temperatura, velocidad]
+                fila_y.append([PRESION_BASE, TEMP_BASE, VEL_BASE])
+            capa_x.append(fila_y)
+        fluido.append(capa_x)
+    return fluido
+ 
+ 
+def aplicarFuentePresion(fluido, x, y, z, magnitud):
 
-# Lista anidada para simular BDD   (Producto, Precio, Cantidad en Stock)
-productos = [
-    ["Producto 1", 10.99, 80],
-    ["Producto 2", 9.99, 40],
-    ["Producto 3", 8.99, 60],
-    ["Producto 4", 7.99, 20],
-    ["Producto 5", 6.99, 70]
-]
+    # Aplica una perturbación de presión en una celda específica.
+    # Simula el origen de una onda (ej: golpe de ariete, explosión).
+    fluido[x][y][z][0] += magnitud
+    fluido[x][y][z][2] += magnitud * FACTOR_VEL   # La velocidad reacciona al impulso
+ 
+ 
+# -----------------------------------------------------------
+# Funciones de acceso y cálculo sobre el arreglo 3D
+# -----------------------------------------------------------
+ 
+def obtenerVecinos(x, y, z):
 
+    # Devuelve las coordenadas de las celdas vecinas ortogonales.
+    # Un nodo interior tiene hasta 6 vecinos (±x, ±y, ±z).
+    # Los nodos en borde tienen menos vecinos (no se sale del cubo).
+    vecinos = []
+    for dx, dy, dz in [(-1,0,0),(1,0,0),(0,-1,0),(0,1,0),(0,0,-1),(0,0,1)]:
+        nx, ny, nz = x + dx, y + dy, z + dz
+        if 0 <= nx < TAMANIO and 0 <= ny < TAMANIO and 0 <= nz < TAMANIO:
+            vecinos.append((nx, ny, nz))
+    return vecinos
+ 
+ 
+def presionPromedioVecinos(fluido, x, y, z):
 
-# Funcion para ingresar mas productos
-def entrada_productos():
-    print("========== ENTRADA DE PRODUCTOS EN BDD ==========")
-
-    # Entrada de Datos
-    producto = input("Nombre del producto: ")
-    precio = float(input("Precio del producto: "))
-    cantidad = int(input("Cantidad del producto entrantes: "))
-
-    # Verificar si el producto ya existe y sumar, o agregar nuevo
-    for i in range(len(productos)):
-        if productos[i][0] == producto:
-            productos[i][2] += cantidad
-            print(f"Stock actualizado: {productos[i][2]} unidades de {producto}")
-            return producto, precio, cantidad
-
-    # Agregar nuevo producto al arreglo productos
-    productos.append([producto, precio, cantidad])
-    print(f"Producto '{producto}' agregado al inventario.")
-    return producto, precio, cantidad
-
-# Funcion para retirar productos
-def salida_productos():
-    print("========== SALIDA DE PRODUCTOS ==========")
-
-    # Entrada de Datos
-    producto = input("Nombre del producto: ")
-    cantidad = int(input("Cantidad del producto salientes: "))
-
-    # Verificar si el producto existe y veridica si la cantidad de salida no supera el stock disponible
-    for i in range(len(productos)):
-        if productos[i][0] == producto:
-            if productos[i][2] >= cantidad:
-                productos[i][2] -= cantidad
-                # Si la cantidad de salida es menor al stock disponible, se registra la salida
-                print(f"Salida registrada. Stock actual: {productos[i][2]}")
-            else:
-                # Si la cantidad de salida supera el stock disponible, se muestra un error y se detiene el proceso
-                print(f"ERROR: Stock insuficiente. Disponible: {productos[i][2]} | Solicitado: {cantidad}")
-            return
-        
-    # Si el producto no existe, se muestra un error
-    print("ERROR: Producto no encontrado.")
-
-# Procedimiento para calcular el inventario óptimo
-def inventario_optimo(productos):
-    print("========== INVENTARIO ÓPTIMO ==========")
-
-    # Bandera para verificar si hay productos con stock menor a 80
-    hay_productos = False
-
-    # bucle para recorrer la lista de productos
-    for i in range(len(productos)):
-        # Verificar si hay productos con stock menor a 80
-        if productos[i][2] < 80:
-            hay_productos = True
-            print()
-            print(f"----- {productos[i][0]} -----")
-            print(f"Cantidad actual: {productos[i][2]} | Cantidad óptima: 80")
-            print()
-
-    if hay_productos == False:
-        print("Todos los productos están en nivel óptimo.")
-
-# Funcion para generar alertas de stock
-def alerta_stock(productos):
-    print("========== ALERTAS DE STOCK ==========")
-
-    # bucle para recorrer la lista de productos
-    for i in range(len(productos)):
-        print()
-        print(f"----- {productos[i][0]} -----")
-
-        # Verificar si el stock de algun producto es menor o igual a 20
-        if productos[i][2] <= 20:
-            print("ALERTA: Se requiere reabastecimiento inmediato")
-            print(f"Cantidad actual: {productos[i][2]} | Cantidad mínima: 20")
-        else:
-            print("Stock en nivel aceptable")
-            print(f"Cantidad actual: {productos[i][2]} | Cantidad mínima: 20")
-        print()
-        return
+    # Calcula la presión promedio de todas las celdas vecinas.
+    # Base del modelo de diferencias finitas para difusión.
+    vecinos = obtenerVecinos(x, y, z)
+    if len(vecinos) == 0:
+        return fluido[x][y][z][0]
+ 
+    suma = 0
+    for nx, ny, nz in vecinos:
+        suma += fluido[nx][ny][nz][0]
+    return suma / len(vecinos)
+ 
+ 
+def actualizarCelda(fluido, nueva_cuadricula, x, y, z):
     
+    # Actualiza los valores de una celda según la difusión de presión.
+ 
+    # Modelo de propagación:
+    #  - La nueva presión es un promedio ponderado entre la presión
+    #    actual y la presión promedio de sus vecinos (difusión).
+    #  - La temperatura sube levemente si hay alta presión (gas ideal).
+    #  - La velocidad se actualiza por el gradiente de presión local.
+    presion_actual   = fluido[x][y][z][0]
+    temp_actual      = fluido[x][y][z][1]
+
+    vel_actual       = fluido[x][y][z][2]
+ 
+    p_vecinos        = presionPromedioVecinos(fluido, x, y, z)
+ 
+    # Difusión: la presión de la celda tiende hacia el promedio de vecinos
+    nueva_presion    = presion_actual + FACTOR_DIFUSION * (p_vecinos - presion_actual)
+ 
+    # Relación presión-temperatura (gas ideal simplificado: T ∝ P)
+    delta_presion    = nueva_presion - presion_actual
+    nueva_temp       = temp_actual + FACTOR_TEMP * delta_presion
+ 
+    # La velocidad se genera por diferencia de presión (gradiente)
+    nueva_vel        = vel_actual + FACTOR_VEL * abs(p_vecinos - presion_actual)
+ 
+    nueva_cuadricula[x][y][z][0] = round(nueva_presion, 2)
+    nueva_cuadricula[x][y][z][1] = round(nueva_temp, 2)
+    nueva_cuadricula[x][y][z][2] = round(nueva_vel, 4)
+ 
+ 
+def propagarOnda(fluido):
+ 
+    # Ejecuta un paso completo de propagación sobre todo el volumen 3x3x3.
+    # Se usa una cuadrícula auxiliar para no mezclar valores del mismo paso.
+    # (Método de actualización simultánea — evita sesgo de orden de recorrido)
+
+    # Crear copia profunda de la cuadrícula
+    nueva = inicializarFluido()
+ 
+    for x in range(TAMANIO):
+        for y in range(TAMANIO):
+            for z in range(TAMANIO):
+
+                # Copiar valor actual antes de modificar
+                nueva[x][y][z] = [
+                    fluido[x][y][z][0],
+                    fluido[x][y][z][1],
+                    fluido[x][y][z][2]
+                ]
+ 
+    # Aplicar la difusión sobre la copia
+    for x in range(TAMANIO):
+        for y in range(TAMANIO):
+            for z in range(TAMANIO):
+                actualizarCelda(fluido, nueva, x, y, z)
+ 
+    return nueva
+ 
+ 
+
+# Procedimientos de visualización
+def mostrarCapa(fluido, capa_x, propiedad, nombre_prop, unidad):
+    """Muestra una capa (plano XY a z fijo) de una propiedad del fluido."""
+    idx = {"presion": 0, "temperatura": 1, "velocidad": 2}[propiedad]
+    print(f"  Capa X={capa_x} | {nombre_prop}")
+    print(f"  {'':>8}  Col 0       Col 1       Col 2")
+    print("  " + "-" * 40)
+    for y in range(TAMANIO):
+        fila = f"  Fila Y={y} |"
+        for z in range(TAMANIO):
+            val = fluido[capa_x][y][z][idx]
+            fila += f"  {val:>7.2f}{unidad}"
+        print(fila)
+    print()
+ 
+ 
+def mostrarEstadoCompleto(fluido, paso):
+    """Muestra el estado de las 3 capas del fluido en un paso dado."""
+    print()
+    print(f"{'=' * 10} PASO {paso} {'=' * 10}")
+    for x in range(TAMANIO):
+        mostrarCapa(fluido, x, "presion",     "PRESIÓN (kPa)",    "kPa")
+        mostrarCapa(fluido, x, "temperatura", "TEMPERATURA (°C)", "°C ")
+        mostrarCapa(fluido, x, "velocidad",   "VELOCIDAD (m/s)",  "m/s")
+    print("-" * 35)
+ 
+ 
+def reporteResumen(fluido, paso):
+    """Muestra solo un resumen rápido: mínimo, máximo y promedio de presión."""
+    valores = []
+    for x in range(TAMANIO):
+        for y in range(TAMANIO):
+            for z in range(TAMANIO):
+                valores.append(fluido[x][y][z][0])
+ 
+    minimo  = min(valores)
+    maximo  = max(valores)
+    promedio = sum(valores) / len(valores)
+ 
+    print(f"  Paso {paso} → Presión mín: {minimo:.2f} kPa | "
+          f"máx: {maximo:.2f} kPa | prom: {promedio:.2f} kPa")
+ 
+ 
 
 
-
-# Sistema Principal
-
-# Bucle while para mostrar el menu de opciones para permitir al usuario 
-# interactuar con la opcion que desee usar
-while True:
-    print("========== SISTEMA DE INVENTARIO ==========")
-    # Menu de opciones
-    print("1 = Entrada de productos")
-    print("2 = Salida de productos")
-    print("3 = Inventario óptimo")
-    print("4 = Alertas de stock")
-    print("5 = Salir")
-
-    opciones_sistema = input("Opción: ")
-
-    if opciones_sistema == "1":
-        entrada_productos()
-    elif opciones_sistema == "2": 
-        salida_productos()
-    elif opciones_sistema == "3":
-        inventario_optimo(productos)
-    elif opciones_sistema == "4":
-        alerta_stock(productos)
-    elif opciones_sistema == "5":
-        print("Saliendo del sistema...")
-        break
-    else:
-        print("Opción no válida. Intente de nuevo.")
+# -----------------------------------------------------------
+# Sistema principal
+print()
+print(("=" * 10), "SIMULACIÓN DE FLUIDO EN CUADRÍCULA 3D (3x3x3)", ("=" * 10))
+ 
+# 1. Inicializar el fluido
+fluido = inicializarFluido()
+print()
+print(("-" * 5), "Estado inicial del fluido", ("-" * 5))
+mostrarEstadoCompleto(fluido, 0)
+ 
+# 2. Aplicar fuente de perturbación (onda de presión en el nodo central)
+print(("-" * 5), "Aplicando perturbación de presión en el nodo central [1][1][1]", ("-" * 5))
+aplicarFuentePresion(fluido, 1, 1, 1, magnitud=50.0)   # +50 kPa en el centro
+print(f"  Presión en [1][1][1] después del impulso: {fluido[1][1][1][0]:.2f} kPa")
+print()
+ 
+# 3. Simular propagación paso a paso
+print(("-" * 5), "Simulación de propagación de onda", ("-" * 5))
+print()
+print("  Resumen de evolución de presión:")
+reporteResumen(fluido, 0)
+ 
+for paso in range(1, PASOS_SIM + 1):
+    fluido = propagarOnda(fluido)
+    reporteResumen(fluido, paso)
+ 
+# 4. Estado final detallado
+print()
+print(("-" * 5), "Estado final del fluido (tras propagación)", ("-" * 5))
+mostrarEstadoCompleto(fluido, PASOS_SIM)
+ 
+print(("=" * 62))
